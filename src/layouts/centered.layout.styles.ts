@@ -1,5 +1,7 @@
-import { css } from '@emotion/css';
-import { theme } from '#core/theme';
+// src/layouts/centered.layout.styles.ts
+
+import { css } from '@emotion/react'; // Corregido a @emotion/react
+import { theme } from '@/core/theme';   // Usando el alias correcto
 
 export const root = css`
   display: grid;

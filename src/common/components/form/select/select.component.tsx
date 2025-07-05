@@ -1,3 +1,5 @@
+// src/common/components/form/select/select.component.tsx
+
 import React from 'react';
 import { useField } from 'formik';
 import {
@@ -8,7 +10,7 @@ import {
   MenuItem,
   FormHelperText,
 } from '@mui/material';
-import { Lookup } from '#common/models';
+import { Lookup } from '@/common/models';
 import * as classes from './select.styles';
 
 type Props = SelectProps & {
@@ -42,7 +44,8 @@ export const SelectComponent: React.FC<Props> = (props) => {
     >
       <InputLabel htmlFor={name} id={labelId}>
         {label}
-      </InputLabel>
+      </InputLabel> 
+      {/* La línea anterior tenía </Input-Label>, con un guion. Ese era el error. */}
       <MuiSelect
         {...otherProps}
         classes={{

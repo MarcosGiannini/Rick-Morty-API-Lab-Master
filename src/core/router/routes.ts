@@ -1,26 +1,20 @@
-import { generatePath } from 'react-router';
+// src/core/router/routes.ts
 
-interface SwitchRoutes {
-  root: string;
-  hotelCollection: string;
-  createHotel: string;
-  editHotel: string;
-}
+/**
+ * @description Define las rutas principales de la aplicación.
+ * Este archivo centraliza la configuración de todas las URLs
+ * a las que puede navegar el usuario dentro de la aplicación.
+ *
+ * Las rutas se organizan en un objeto para facilitar su acceso
+ * y evitar errores tipográficos al referenciarlas.
+ */
+export const appRoutes = {
+  // Ruta para la página principal que mostrará la colección de personajes.
+  // Se utiliza la URL raíz ('/') para que sea el punto de entrada principal.
+  characterCollection: '/',
 
-export const switchRoutes: SwitchRoutes = {
-  root: '/',
-  hotelCollection: '/hotels',
-  createHotel: '/hotels/create',
-  editHotel: '/hotels/:id',
-};
-
-type NavigationFunction = (id: string) => string;
-
-interface LinkRoutes extends Omit<SwitchRoutes, 'editHotel'> {
-  editHotel: NavigationFunction;
-}
-
-export const linkRoutes: LinkRoutes = {
-  ...switchRoutes,
-  editHotel: (id) => generatePath(switchRoutes.editHotel, { id }),
+  // Ruta para el detalle de un personaje específico.
+  // Se añade ':id' para indicar que esta ruta espera un parámetro de ID
+  // en la URL, que se usará para cargar la información del personaje.
+  character: '/character/:id',
 };

@@ -1,2 +1,4 @@
-export * from './centered.layout';
-export * from './app.layout';
+// src/layouts/index.ts
+
+export { AppLayout } from './app.layout';
+export { CenteredLayout } from './centered.layout';
