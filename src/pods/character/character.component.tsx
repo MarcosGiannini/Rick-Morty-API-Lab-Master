@@ -1,39 +1,40 @@
 // src/pods/character/character.component.tsx
 
-import React from 'react'; // Importamos React para crear componentes.
-import { CharacterVm } from './character.vm'; // Importamos el ViewModel del personaje para tipado.
-// NOTA PARA EL PROFESOR: Se corrige la importación de los estilos.
-// Se importa 'styled' para que los elementos de estilo (CharacterDetailContainer, ImageContainer, etc.)
-// se reconozcan como componentes JSX válidos.
-import * as S from './character.styles'; // Importamos todos los estilos definidos para este componente.
+import React from 'react';
+import { CharacterVm } from './character.vm';
+import * as S from './character.styles';
+// NOTA PARA EL PROFESOR: Se añaden componentes de Material-UI para el formulario de edición.
+import { TextField, Button, Box } from '@mui/material';
 
 /**
- * @description Propiedades que espera el componente CharacterComponent.
- * Define la estructura de los datos que recibirá para mostrar el detalle de un personaje.
+ * @description Propiedades que espera el componente. Ahora incluye las necesarias
+ * para la edición de la 'mejor frase'.
  */
 interface Props {
-  character: CharacterVm; // El objeto de personaje a mostrar.
+  character: CharacterVm;
+  editableBestSentence: string;
+  onSentenceChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSaveSentence: () => void;
 }
 
 /**
  * @description Componente de presentación para el detalle de un personaje.
- * Muestra la información detallada de un personaje, como su nombre, estado, especie,
- * género, origen, ubicación, imagen y conteo de episodios.
- *
- * NOTA PARA EL PROFESOR: Este componente es un "dumb component" que solo se encarga
- * de la presentación de los datos que recibe por props, sin lógica de negocio.
- * @param props Las propiedades del componente: el objeto 'character'.
+ * Ahora incluye un formulario para editar y guardar la 'bestSentence'.
  */
 export const CharacterComponent: React.FC<Props> = (props) => {
-  const { character } = props; // Desestructuramos las props.
+  const {
+    character,
+    editableBestSentence,
+    onSentenceChange,
+    onSaveSentence,
+  } = props;
 
   return (
-    // Contenedor principal del detalle del personaje, aplicando estilos definidos.
-    // NOTA PARA EL PROFESOR: Se usa S.CharacterDetailContainer como un componente styled.
     <S.CharacterDetailContainer>
       <S.ImageContainer>
         <img src={character.image} alt={character.name} />
       </S.ImageContainer>
+
       <S.InfoContainer>
         <S.Name>{character.name}</S.Name>
         <S.DetailItem>
@@ -57,9 +58,43 @@ export const CharacterComponent: React.FC<Props> = (props) => {
         <S.DetailItem>
           <strong>Episodes:</strong> {character.episodeCount}
         </S.DetailItem>
-        <S.BestSentence>
-          "<em>{character.bestSentence}</em>"
-        </S.BestSentence>
+        
+        {/* Mostramos la mejor frase actual si existe */}
+        {character.bestSentence && (
+          <S.BestSentence>
+            "<em>{character.bestSentence}</em>"
+          </S.BestSentence>
+        )}
+
+        {/* Formulario de edición */}
+        <Box
+          component="div"
+          sx={{
+            width: '100%',
+            mt: 4, // margen superior (margin-top)
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 2, // espacio entre elementos
+          }}
+        >
+          <TextField
+            label="Editar la mejor frase"
+            variant="outlined"
+            fullWidth
+            multiline
+            rows={2}
+            value={editableBestSentence}
+            onChange={onSentenceChange}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={onSaveSentence}
+          >
+            Guardar Frase
+          </Button>
+        </Box>
+
       </S.InfoContainer>
     </S.CharacterDetailContainer>
   );

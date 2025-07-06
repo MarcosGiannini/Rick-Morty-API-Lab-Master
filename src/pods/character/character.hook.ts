@@ -1,36 +1,25 @@
 // src/pods/character/character.hook.ts
 
 import React from 'react';
-import { useParams } from 'react-router-dom'; // Hook para leer parámetros de la URL (el :id)
-import { getCharacter } from './api/character.api';
+import { useParams } from 'react-router-dom';
+// 1. Importamos la nueva función 'updateCharacter' de la API.
+import { getCharacter, updateCharacter } from './api/character.api';
 import { mapCharacterFromApiToVm } from './character.mappers';
 import { CharacterVm } from './character.vm';
 
-/**
- * @description Hook personalizado para manejar la lógica de la página de detalle de un personaje.
- * @returns Un objeto con el personaje, y los estados de carga y error.
- */
 export const useCharacter = () => {
-  // Estado para almacenar los datos del personaje que se mostrará.
   const [character, setCharacter] = React.useState<CharacterVm | null>(null);
-  // Estados de carga y error.
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState('');
-  
-  // useParams nos da los parámetros de la ruta, en nuestro caso, el 'id'.
   const { id } = useParams<{ id: string }>();
 
-  // Usamos useEffect para cargar los datos del personaje cuando el componente se monta
-  // o cuando el 'id' de la URL cambia.
   React.useEffect(() => {
     const fetchCharacter = async () => {
-      if (id) { // Nos aseguramos de que el id existe.
+      if (id) {
         setLoading(true);
         setError('');
         try {
-          // Llamamos a la API con el id de la URL.
           const apiCharacter = await getCharacter(id);
-          // Mapeamos la respuesta y la guardamos en el estado.
           setCharacter(mapCharacterFromApiToVm(apiCharacter));
         } catch (apiError) {
           console.error(`Error al obtener el personaje con id ${id}:`, apiError);
@@ -42,8 +31,34 @@ export const useCharacter = () => {
     };
 
     fetchCharacter();
-  }, [id]); // El efecto se volverá a ejecutar si el 'id' cambia.
+  }, [id]);
 
-  // Devolvemos los datos y estados para que el componente los use.
-  return { character, loading, error };
+  /**
+   * @description Función para guardar la 'bestSentence' de un personaje.
+   * Llama a la API para actualizar y, si tiene éxito, actualiza el estado local.
+   * @param bestSentence La nueva frase a guardar.
+   */
+  const saveCharacterSentence = async (bestSentence: string) => {
+    // No podemos guardar si no sabemos qué personaje es.
+    if (!id || !character) return;
+
+    try {
+      // Llamamos a la API para enviar la actualización.
+      await updateCharacter(id, { bestSentence });
+
+      // Si la API guarda bien, actualizamos nuestro estado local para que la UI
+      // se refresque instantáneamente con la nueva frase.
+      setCharacter({
+        ...character,
+        bestSentence,
+      });
+      alert('¡Frase guardada con éxito!');
+    } catch (apiError) {
+      console.error(`Error al guardar la frase para el personaje con id ${id}:`, apiError);
+      alert('Error al guardar la frase.');
+    }
+  };
+
+  // 3. Devolvemos la nueva función junto con el resto de estados.
+  return { character, loading, error, saveCharacterSentence };
 };
