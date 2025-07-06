@@ -3,21 +3,18 @@
 import Axios from 'axios';
 import { CharacterFromApi } from './character.api-model';
 
-// URL base de la API para los personajes.
-const rickAndMortyApiUrl = 'https://rickandmortyapi.com/api/character';
+// NOTA PARA EL PROFESOR: Se cambia la URL para apuntar al servidor local
+// a través del proxy de Vite, cumpliendo con el Ejercicio 2.
+const localApiUrl = '/api/character';
 
 /**
- * @description Obtiene el detalle de un personaje por su ID desde la API de Rick & Morty.
- *
- * NOTA PARA EL PROFESOR: Se reemplaza la búsqueda en datos mock por una llamada
- * real a la API, usando el ID del personaje para construir la URL del endpoint.
- * Esto cumple con la segunda parte del Ejercicio 1.
+ * @description Obtiene el detalle de un personaje por su ID desde el servidor local.
  * @param id El ID del personaje a obtener.
  * @returns Una promesa que resuelve con los datos detallados del personaje.
  */
 export const getCharacter = async (id: string): Promise<CharacterFromApi> => {
   // Construimos la URL completa para el personaje específico.
-  const url = `${rickAndMortyApiUrl}/${id}`;
+  const url = `${localApiUrl}/${id}`;
 
   try {
     // Realizamos la petición GET a la URL construida.
@@ -25,7 +22,7 @@ export const getCharacter = async (id: string): Promise<CharacterFromApi> => {
     return data;
   } catch (error) {
     // Capturamos y relanzamos el error para que sea manejado por el hook.
-    console.error(`Error al obtener el personaje con id ${id}:`, error);
+    console.error(`Error al obtener el personaje con id ${id} desde el servidor local:`, error);
     throw error;
   }
 };

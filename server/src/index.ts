@@ -39,6 +39,7 @@ app.put('/api/character/:id', async (context) => {
   return context.body(null, 204);
 });
 
-serve({ fetch: app.fetch, port: 3000 }, (info) => {
+//                                     👇 Aquí está el único cambio
+serve({ fetch: app.fetch, port: 3001 }, (info) => {
   console.log(`API running on ${info.port}`);
 });
