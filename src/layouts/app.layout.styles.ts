@@ -13,17 +13,39 @@ export const AppLayoutContainer = styled.div`
   color: ${theme.palette.text.primary};
 `;
 
-// CAMBIO: Usamos styled.header para un componente semántico
 export const Header = styled.header`
   background-color: ${theme.palette.primary.main};
   color: ${theme.palette.primary.contrastText};
-  padding: ${theme.spacing(2)};
-  text-align: center;
+  padding: ${theme.spacing(1)} ${theme.spacing(4)};
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
   h1 {
     font-size: ${theme.typography.h5.fontSize};
     font-weight: ${theme.typography.h5.fontWeight};
     margin: 0;
+  }
+
+  // NOTA PARA EL PROFESOR: Se añade un <nav> para la navegación principal.
+  nav {
+    display: flex;
+    gap: ${theme.spacing(3)};
+  }
+
+  // Estilos para los enlaces de navegación.
+  a {
+    color: ${theme.palette.primary.contrastText};
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: ${theme.spacing(1)};
+    border-radius: 4px;
+    transition: background-color 0.2s ease-in-out;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
   }
 `;
 

@@ -49,10 +49,13 @@ export const Name = styled.h6`
   font-size: ${theme.typography.h6.fontSize};
   font-weight: ${theme.typography.fontWeightBold};
   color: ${theme.palette.primary.main};
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   margin: 0 0 ${theme.spacing(0.5)} 0;
+  
+  /* --- AÑADIMOS ESTAS 4 LÍNEAS PARA EL TRUNCADO --- */
+  width: 100%; /* El nombre debe tener un ancho definido para que funcione */
+  white-space: nowrap; /* Evita que el texto salte a una nueva línea */
+  overflow: hidden; /* Oculta el texto que se desborda */
+  text-overflow: ellipsis; /* Muestra los puntos suspensivos */
 `;
 
 export const StatusAndSpecies = styled.span`

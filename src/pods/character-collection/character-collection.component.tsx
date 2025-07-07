@@ -1,47 +1,97 @@
 // src/pods/character-collection/character-collection.component.tsx
 
 import React from 'react';
-// NOTA PARA EL PROFESOR: Se utiliza la ruta relativa explícita para el ViewModel, subiendo un nivel
-// y especificando la carpeta y el archivo exacto, según la estructura de proyecto.
-import { CharacterCollectionVm } from '../character-collection/character-collection.vm'; 
-// NOTA PARA EL PROFESOR: Se utiliza la ruta relativa explícita para el componente de tarjeta, entrando en la carpeta 'components'.
-import { CharacterCardComponent } from './components/character-card.component'; 
-// NOTA PARA EL PROFESOR: Se utiliza la ruta relativa explícita para los estilos de la colección, en la misma carpeta.
-import * as S from './character-collection.styles'; 
+import { CharacterCollectionVm } from './character-collection.vm';
+import { CharacterCardComponent } from './components/character-card.component';
+import * as S from './character-collection.styles';
+import { Button, Box, Typography, CircularProgress, TextField } from '@mui/material';
+import { CharacterCollectionFromApi } from './api/character-collection.api-model';
 
-/**
- * @description Propiedades que espera el componente CharacterCollectionComponent.
- * Define la estructura de los datos (lista de personajes) y la función de callback
- * para manejar la interacción del usuario al seleccionar un personaje.
- */
+type PageInfo = CharacterCollectionFromApi['info'] | null;
+
 interface Props {
-  characterList: CharacterCollectionVm['characterList']; 
-  onSelectCharacter: (id: number) => void; 
+  characterList: CharacterCollectionVm['characterList'];
+  onSelectCharacter: (id: number) => void;
+  onNextPage: () => void;
+  onPrevPage: () => void;
+  pageInfo: PageInfo;
+  loading: boolean;
+  error: string;
+  searchQuery: string;
+  onSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSearch: () => void;
 }
 
-/**
- * @description Componente de presentación para la lista de personajes.
- * Este componente se encarga de renderizar la interfaz de usuario de la colección de personajes.
- * Recibe los datos y las funciones de manejo de eventos a través de sus propiedades (props),
- * manteniendo la lógica de negocio separada de la presentación visual.
- *
- * Utiliza 'CharacterCardComponent' para renderizar cada personaje individualmente.
- *
- * @param props Las propiedades del componente: 'characterList' (lista de personajes)
- * y 'onSelectCharacter' (función de callback al seleccionar un personaje).
- */
 export const CharacterCollectionComponent: React.FC<Props> = (props) => {
-  const { characterList, onSelectCharacter } = props; 
+  const {
+    characterList,
+    onSelectCharacter,
+    onNextPage,
+    onPrevPage,
+    pageInfo,
+    loading,
+    error,
+    searchQuery,
+    onSearchChange,
+    onSearch,
+  } = props;
 
   return (
-    <S.CharacterCollectionContainer>
-      {characterList.map((character) => (
-        <CharacterCardComponent
-          key={character.id} 
-          character={character} 
-          onSelectCharacter={onSelectCharacter} 
+    <Box sx={{ width: '100%' }}>
+      {/* Formulario de Búsqueda */}
+      <Box 
+        component="div" 
+        sx={{ my: 4, display: 'flex', justifyContent: 'center', gap: 2, alignItems: 'center' }}
+      >
+        <TextField
+          label="Buscar por nombre"
+          variant="outlined"
+          value={searchQuery}
+          onChange={onSearchChange}
+          onKeyDown={(e) => e.key === 'Enter' && onSearch()}
         />
-      ))}
-    </S.CharacterCollectionContainer>
+        <Button variant="contained" onClick={onSearch} disabled={loading}>
+          Buscar
+        </Button>
+      </Box>
+
+      {/* Mensaje de error o "No encontrado" */}
+      {error && !loading && (
+        <Typography color="error" align="center" sx={{ my: 4 }}>
+          {error}
+        </Typography>
+      )}
+
+      {/* Cuadrícula de Personajes */}
+      <S.CharacterCollectionContainer>
+        {characterList.map((character) => (
+          <CharacterCardComponent
+            key={character.id}
+            character={character}
+            onSelectCharacter={onSelectCharacter}
+          />
+        ))}
+      </S.CharacterCollectionContainer>
+
+      {/* Feedback de Carga */}
+      {loading && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
+          <CircularProgress />
+        </Box>
+      )}
+
+      {/* Paginación */}
+      {/* Solo mostramos la paginación si hay páginas a las que ir y no hay error */}
+      {pageInfo && pageInfo.count > 0 && !error && (
+        <S.PaginationContainer>
+          <Button variant="contained" onClick={onPrevPage} disabled={!pageInfo?.prev || loading}>
+            Anterior
+          </Button>
+          <Button variant="contained" onClick={onNextPage} disabled={!pageInfo?.next || loading}>
+            Siguiente
+          </Button>
+        </S.PaginationContainer>
+      )}
+    </Box>
   );
 };

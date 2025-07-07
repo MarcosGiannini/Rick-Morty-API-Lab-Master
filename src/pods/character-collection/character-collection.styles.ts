@@ -12,3 +12,12 @@ export const CharacterCollectionContainer = styled.div`
   gap: ${theme.spacing(4)};
   padding: ${theme.spacing(4)};
 `;
+
+export const PaginationContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: ${theme.spacing(2)};
+  margin-top: ${theme.spacing(4)};
+  padding-bottom: ${theme.spacing(4)};
+`;
