@@ -13,9 +13,6 @@
     "type-check:watch": "npm run type-check -- --watch",
     "postinstall": "cd ./server && npm install"
   },
-  "imports": {
-    "#*": "./src/*"
-  },
   "author": "Lemoncode",
   "license": "MIT",
   "dependencies": {
