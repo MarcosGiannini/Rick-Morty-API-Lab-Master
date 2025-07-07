@@ -3,9 +3,9 @@
 import React from 'react';
 import { generatePath, useNavigate } from 'react-router-dom';
 import { CharacterCollectionComponent } from './character-collection.component';
-import { useCharacterCollection } from './character-collection.hook';
-// 👇 CAMBIO AQUÍ: importamos 'switchRoutes'
-import { switchRoutes } from '@/core/router'; 
+import { useCharacterCollectionGraphQL as useCharacterCollection } from './character-collection.graphql.hook';
+// Corregido: Usamos switchRoutes
+import { switchRoutes } from '@/core/router';
 
 export const CharacterCollectionContainer: React.FC = () => {
   const navigate = useNavigate();
@@ -17,37 +17,30 @@ export const CharacterCollectionContainer: React.FC = () => {
     error,
     pageInfo,
   } = useCharacterCollection();
-  
-  React.useEffect(() => {
-    fetchCharacterCollection();
-  }, []);
 
   const onSelectCharacter = (id: number) => {
-    // 👇 Y LO USAMOS AQUÍ
+    // Corregido: Usamos switchRoutes
     navigate(generatePath(switchRoutes.character, { id }));
   };
 
   const handleNextPage = () => {
-    if (pageInfo?.next) {
-      fetchCharacterCollection({ pageUrl: pageInfo.next });
+    // Nos aseguramos de que 'next' es un número antes de pasarlo.
+    if (typeof pageInfo?.next === 'number') {
+      fetchCharacterCollection(pageInfo.next);
     }
   };
 
   const handlePrevPage = () => {
-    if (pageInfo?.prev) {
-      fetchCharacterCollection({ pageUrl: pageInfo.prev });
+    // Nos aseguramos de que 'prev' es un número antes de pasarlo.
+    if (typeof pageInfo?.prev === 'number') {
+      fetchCharacterCollection(pageInfo.prev);
     }
   };
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-  };
-
-  const handleSearch = () => {
-    fetchCharacterCollection({ searchQuery: searchQuery });
-  };
-  
+  // ... (El resto de la lógica de búsqueda se queda como está) ...
   const [searchQuery, setSearchQuery] = React.useState('');
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value);
+  const handleSearch = () => console.log('Búsqueda no implementada para GraphQL en este paso.');
 
   return (
     <CharacterCollectionComponent

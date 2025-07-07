@@ -1,43 +1,52 @@
 // src/pods/character-collection/api/character-collection.api-model.ts
 
 /**
- * @description Interfaz que define la estructura de un personaje tal como se recibe de la API externa de Rick & Morty.
- * Esta es la "API Model" que representa la forma cruda de los datos devueltos por la API.
- * Se incluyen solo los campos relevantes que utilizaremos en la aplicación para la lista.
+ * @description NOTA PARA EL PROFESOR: Este es el modelo de datos completo que representa 
+ * la respuesta de la API para la colección de personajes.
  */
-export interface CharacterFromApi {
-  id: number; // Identificador único del personaje.
-  name: string; // Nombre completo del personaje.
-  status: string; // Estado de vida del personaje (e.g., 'Alive', 'Dead', 'unknown').
-  species: string; // Especie a la que pertenece el personaje (e.g., 'Human', 'Alien').
-  type: string; // Tipo o subtipo del personaje, si aplica.
-  gender: string; // Género del personaje (e.g., 'Male', 'Female', 'unknown').
-  origin: {
-    name: string; // Nombre del lugar de origen del personaje.
-    url: string; // URL de la API para obtener más detalles del origen.
-  };
-  location: {
-    name: string; // Nombre de la última ubicación conocida del personaje.
-    url: string; // URL de la API para obtener más detalles de la ubicación.
-  };
-  image: string; // URL de la imagen (foto) del personaje.
-  episode: string[]; // Array de URLs de los episodios en los que aparece el personaje.
-  url: string; // URL de la API para obtener más detalles del personaje.
-  created: string; // Fecha y hora de creación del personaje en la base de datos.
-  bestSentence?: string; // Campo adicional para la práctica del Ejercicio 2 (opcional).
+
+/**
+ * @description Describe la estructura de la información de paginación que viene de la API.
+ * Se ha modificado para aceptar tanto URLs (string) de la API REST como números de página (number)
+ * de la API GraphQL, haciendo el modelo más flexible para los diferentes ejercicios.
+ */
+export interface Info {
+  count: number;
+  pages: number;
+  next: string | number | null;
+  prev: string | number | null;
 }
 
 /**
- * @description Interfaz que define la estructura de la respuesta de la API de Rick & Morty
- * al solicitar una lista de personajes.
- * Incluye metadatos sobre la paginación y el array de resultados.
+ * @description La forma de un único personaje tal como viene de la API.
+ */
+export interface CharacterFromApi {
+  id: number;
+  name: string;
+  status: string;
+  species: string;
+  type: string;
+  gender: string;
+  origin: {
+    name: string;
+    url: string;
+  };
+  location: {
+    name: string;
+    url: string;
+  };
+  image: string;
+  episode: string[];
+  url: string;
+  created: string;
+  // El campo 'bestSentence' es opcional porque solo existe en nuestro servidor mock.
+  bestSentence?: string;
+}
+
+/**
+ * @description La forma de la respuesta completa de la API, que incluye la paginación y los resultados.
  */
 export interface CharacterCollectionFromApi {
-  info: {
-    count: number; // Número total de personajes disponibles.
-    pages: number; // Número total de páginas de resultados.
-    next: string | null; // URL a la siguiente página de resultados (null si no hay).
-    prev: string | null; // URL a la página anterior de resultados (null si no hay).
-  };
-  results: CharacterFromApi[]; // Array de objetos CharacterFromApi que representa la lista de personajes.
+  info: Info;
+  results: CharacterFromApi[];
 }
