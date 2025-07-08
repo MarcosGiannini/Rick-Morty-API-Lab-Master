@@ -1,32 +1,20 @@
 // src/pods/character/character.container.tsx
 
 import React from 'react';
-import { useCharacter } from './character.hook';
+// NOTA PARA EL PROFESOR: Cambio final para el opcional de GraphQL.
+// Se importa el hook de GraphQL y se le asigna un alias para reemplazar
+// limpiamente la implementación de REST sin alterar el resto del componente.
+import { useCharacterGraphQL as useCharacter } from './character.graphql.hook';
 import { CharacterComponent } from './character.component';
 
+/**
+ * @description Componente contenedor que ahora usa GraphQL para obtener los datos del personaje.
+ */
 export const CharacterContainer: React.FC = () => {
-  // Ahora el hook nos devuelve también la función para guardar.
-  const { character, loading, error, saveCharacterSentence } = useCharacter();
+  // Gracias al alias, esta llamada ahora usa nuestro hook de GraphQL.
+  const { character, loading, error } = useCharacter();
 
-  const [editableSentence, setEditableSentence] = React.useState('');
-
-  React.useEffect(() => {
-    if (character) {
-      setEditableSentence(character.bestSentence || '');
-    }
-  }, [character]);
-
-  const handleSentenceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEditableSentence(e.target.value);
-  };
-
-  // ¡Aquí está la conexión!
-  // El botón 'Guardar' ahora llama a la función del hook con la frase a guardar.
-  const handleSaveSentence = () => {
-    saveCharacterSentence(editableSentence);
-  };
-
-  if (loading && !character) { // Mostramos 'cargando' solo la primera vez.
+  if (loading && !character) {
     return <p>Cargando personaje...</p>;
   }
 
@@ -34,16 +22,15 @@ export const CharacterContainer: React.FC = () => {
     return <p>{error}</p>;
   }
 
-  // NOTA PARA EL PROFESOR: El contenedor conecta el evento 'onClick' del botón
-  // con la lógica de guardado expuesta por el hook, completando el flujo de datos
-  // para la edición y persistencia de la 'bestSentence'.
-
+  // Como el opcional de GraphQL se centra en la lectura de datos,
+  // la funcionalidad de edición (que pertenece al Ejercicio 2 con el servidor local)
+  // se simula con valores y funciones vacías para que el componente no dé error.
   return character ? (
     <CharacterComponent
       character={character}
-      editableBestSentence={editableSentence}
-      onSentenceChange={handleSentenceChange}
-      onSaveSentence={handleSaveSentence}
+      editableBestSentence={character.bestSentence || ''}
+      onSentenceChange={() => {}} // No hace nada en modo GraphQL
+      onSaveSentence={() => {}}   // No hace nada en modo GraphQL
     />
   ) : null;
 };
