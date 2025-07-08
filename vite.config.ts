@@ -5,7 +5,7 @@ import { fileURLToPath, URL } from 'node:url';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/Rick-Morty-API-Lab-Master/', // <--- AÑADE ESTA LÍNEA
+  base: '/Rick-Morty-API-Lab-Master/',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
