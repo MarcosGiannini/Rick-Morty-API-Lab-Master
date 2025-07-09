@@ -1,45 +1,48 @@
-# Nombre del workflow que aparecerá en la pestaña "Actions" de GitHub
+# Nombre del workflow
 name: Deploy to GitHub Pages
 
-# Disparador: ¿Cuándo se ejecuta este workflow?
-# Se ejecutará cada vez que haya un "push" (una subida de código) a la rama "main".
+# Disparador
 on:
   push:
     branches:
       - "main"
 
-# Permisos: Le damos permiso al robot para que pueda escribir en nuestro repositorio.
+# Permisos
 permissions:
   contents: write
 
-# Tareas: ¿Qué trabajos tiene que hacer el robot?
+# Tareas
 jobs:
-  # Definimos un único trabajo llamado "build-and-deploy"
   build-and-deploy:
-    # Máquina virtual: El robot necesita un ordenador para trabajar. Usará uno con Ubuntu.
+    # Máquina virtual
     runs-on: ubuntu-latest
 
-    # Pasos: La secuencia de comandos que debe ejecutar el robot.
+    # Pasos
     steps:
-      # 1. Descargar el código del repositorio
+      # 1. Descargar el código (igual que antes)
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Instalar y configurar Node.js para poder usar npm
+      # 2. Instalar Node.js (igual que antes)
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
 
-      # 3. Instalar todas las dependencias del proyecto
+      # 3. Instalar dependencias (igual que antes)
       - name: Install dependencies
         run: npm install
 
-      # 4. Construir la aplicación (ejecuta "npm run build")
+      # 4. Construir la aplicación (igual que antes)
       - name: Build application
         run: npm run build
 
-      # 5. Desplegar en la rama gh-pages (ejecuta nuestro script "npm run deploy")
-      - name: Deploy to gh-pages
-        run: npm run deploy
+      # 5. Desplegar en gh-pages (¡ESTE ES EL PASO CORREGIDO!)
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4 # Usamos una acción especializada
+        with:
+          # Le pasamos el "DNI" o contraseña temporal y segura que GitHub le da al robot
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # Le decimos qué carpeta tiene que publicar
+          publish_dir: ./dist
