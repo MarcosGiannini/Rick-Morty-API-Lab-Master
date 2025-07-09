@@ -1,11 +1,11 @@
-// vite.config.ts
-
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 import { fileURLToPath, URL } from 'node:url';
 
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  base: '/Rick-Morty-API-Lab-Master/',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
@@ -14,15 +14,12 @@ export default defineConfig({
   server: {
     port: 8080,
     open: true,
-    // 👇 AÑADE ESTA SECCIÓN
+    // ... tu configuración de proxy ...
     proxy: {
-      // Cualquier petición que empiece por '/api'
       '/api': {
-        // Se la redirigimos a nuestro servidor local
         target: 'http://localhost:3001',
-        // Necesario para que el servidor de destino reciba bien la petición
         changeOrigin: true,
       },
     },
   },
-});
+})
